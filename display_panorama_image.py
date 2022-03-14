@@ -27,12 +27,13 @@ current_img = crop_panorama_image(img, fov=args.fov)
 
 cur_theta = 0.0
 cur_phi = 0.0
+cur_fov = args.fov
 
 stop_requested = False
 img_updated = False
 
 def key_press(key, mod):
-    global cur_phi, cur_theta, stop_requested, img_updated
+    global cur_phi, cur_theta, stop_requested, img_updated, cur_fov
     if key == ord('Q') or key == ord('q'): # q/Q
         stop_requested = True
     if key == 0xFF52: # up
@@ -55,6 +56,16 @@ def key_press(key, mod):
             cur_phi += math.pi/12
         print ('Theta: %.4f, Phi: %.4f' % (cur_theta, cur_phi))
         img_updated = True
+    if key == ord('s'):
+        if cur_fov < 90.0:
+            cur_fov += 10.0
+        print ('FOV: %.4f' % cur_fov)
+        img_updated = True
+    if key == ord('w'):
+        if cur_fov > 30.0:
+            cur_fov -= 10.0
+        print ('FOV: %.4f' % cur_fov)
+        img_updated = True
 
 def loop():
     global current_img, img_updated
@@ -65,7 +76,7 @@ def loop():
         if img_updated:
             print ('Updating...')
             img_updated = False
-            current_img = crop_panorama_image(img, cur_theta/math.pi*180, cur_phi/math.pi*180, fov=args.fov)
+            current_img = crop_panorama_image(img, cur_theta/math.pi*180, cur_phi/math.pi*180, fov=cur_fov)
             print ('Updated.')
         viewer.imshow(np.array(Image.fromarray(obj=current_img).resize(size=(512, 512))))
         # viewer.imshow(imresize(current_img, [512, 512]))
