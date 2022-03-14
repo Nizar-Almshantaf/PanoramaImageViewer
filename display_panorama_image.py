@@ -6,8 +6,8 @@ import argparse
 import numpy as np
 import cv2
 import math
-from scipy.misc import imresize
-
+# from scipy.misc import imresize
+from PIL import Image
 from tools import SimpleImageViewer
 from panorama_image_cropper import crop_panorama_image
 
@@ -67,12 +67,13 @@ def loop():
             img_updated = False
             current_img = crop_panorama_image(img, cur_theta/math.pi*180, cur_phi/math.pi*180, fov=args.fov)
             print ('Updated.')
-
-        viewer.imshow(imresize(current_img, [512, 512]))
+        viewer.imshow(np.array(Image.fromarray(obj=current_img).resize(size=(512, 512))))
+        # viewer.imshow(imresize(current_img, [512, 512]))
 
 if __name__ == '__main__':
     viewer = SimpleImageViewer()
-    viewer.imshow(imresize(current_img, [512, 512]))
+    viewer.imshow(np.array(Image.fromarray(obj=current_img).resize(size=(512, 512))))
+    # viewer.imshow(imresize(current_img, [512, 512]))
     viewer.window.on_key_press = key_press
 
     print("Use arrow keys to move the agent.")
