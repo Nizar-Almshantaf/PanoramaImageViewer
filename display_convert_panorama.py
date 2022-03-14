@@ -35,7 +35,7 @@ img_updated = False
 
 def key_press(key, mod):
     global cur_phi, cur_theta, stop_requested, img_updated, save_requested
-    print key
+    print (key)
     if key == ord('Q') or key == ord('q'): # q/Q
         stop_requested = True
     if key == ord('S') or key == ord('s'): # s/S
@@ -43,22 +43,22 @@ def key_press(key, mod):
     if key == 0xFF52: # up
         if cur_phi > -80.0 / 180 * math.pi:
             cur_phi -= math.pi/12
-        print 'Theta: %.4f, Phi: %.4f' % (cur_theta, cur_phi)
+        print ('Theta: %.4f, Phi: %.4f' % (cur_theta, cur_phi))
         img_updated = True
     if key == 0xFF53: # right
         cur_theta += math.pi/12
         cur_theta = (cur_theta + math.pi) % (2 * math.pi) - math.pi
-        print 'Theta: %.4f, Phi: %.4f' % (cur_theta, cur_phi)
+        print ('Theta: %.4f, Phi: %.4f' % (cur_theta, cur_phi))
         img_updated = True
     if key == 0xFF51: # left
         cur_theta -= math.pi/12
         cur_theta = (cur_theta + math.pi ) % (2 * math.pi) - math.pi
-        print 'Theta: %.4f, Phi: %.4f' % (cur_theta, cur_phi)
+        print ('Theta: %.4f, Phi: %.4f' % (cur_theta, cur_phi))
         img_updated = True
     if key == 0xFF54: # down
         if cur_phi < 80.0 / 180 * math.pi:
             cur_phi += math.pi/12
-        print 'Theta: %.4f, Phi: %.4f' % (cur_theta, cur_phi)
+        print ('Theta: %.4f, Phi: %.4f' % (cur_theta, cur_phi))
         img_updated = True
 
 def loop():
@@ -69,16 +69,16 @@ def loop():
 
         if save_requested:
             save_requested = False
-            print 'Theta: %.4f, Phi: %.4f' % (cur_theta, cur_phi)
+            print ('Theta: %.4f, Phi: %.4f' % (cur_theta, cur_phi))
             out_img = convert_panorama_image(ori_img, theta=cur_theta/math.pi*180, phi=cur_phi/math.pi*180)
             cv2.imwrite('new_panorama.png', out_img)
-            print 'Saved to new_panorama.png'
+            print ('Saved to new_panorama.png')
         
         if img_updated:
-            print 'Updating...'
+            print ('Updating...')
             img_updated = False
             current_img = crop_panorama_image(img, cur_theta/math.pi*180, cur_phi/math.pi*180, fov=args.fov)
-            print 'Updated.'
+            print ('Updated.')
 
         viewer.imshow(imresize(current_img, [512, 512]))
 
